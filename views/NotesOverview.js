@@ -7,6 +7,11 @@ export default function NotesOverview() {
   const [inputValue, setInputValue] = useState("");
   const [notes, setNotes] = useState([]);
 
+  function handleEditBtnPress() {
+    setNotes([inputValue, ...notes]);
+    setInputValue("");
+  }
+
   return (
     <PageWrapper>
       <View style={styles.addNoteContainer}>
@@ -21,11 +26,7 @@ export default function NotesOverview() {
           style={styles.noteInput}
         />
         <Pressable
-          onPress={() => {
-            setNotes([...notes, inputValue]);
-            setInputValue("");
-            console.log(`notes: ${notes}`);
-          }}
+          onPress={() => handleEditBtnPress()}
           style={styles.addButton}
         >
           <Text>Add Note</Text>
@@ -35,7 +36,19 @@ export default function NotesOverview() {
         <Text style={{ fontSize: 17, fontWeight: "bold" }}>Your Notes:</Text>
         <View style={styles.notesContainer}>
           {notes.map((note, index) => {
-            return <Note key={index} textValue={note}/>
+            return (
+              <Note
+                key={index}
+                note={note}
+                onSave={(toSave) =>
+                  setNotes((prev) =>
+                    prev.map((item, noteIndex) => {
+                      return noteIndex === index ? toSave : item;
+                    }),
+                  )
+                }
+              />
+            );
           })}
         </View>
       </View>

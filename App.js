@@ -1,12 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NotesOverview from './views/NotesOverview';
+import NoteDetails from './views/NoteDetails';
 
 export default function App() {
+
+  const stack = createNativeStackNavigator();
+
   return (
-    <View style={styles.container}>
-      <NotesOverview />
-    </View>
+    <NavigationContainer>
+      <stack.Navigator initialRouteName='Home'>
+        <stack.Screen name="Home" component={NotesOverview}/>
+        <stack.Screen name="Details" component={NoteDetails}/>
+      </stack.Navigator>
+    </NavigationContainer>
   );
 }
 
