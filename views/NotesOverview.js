@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import { firebase } from "../lib/firebase";
 import PageWrapper from "../components/PageWrapper";
 import Note from "../components/Note";
 
 export default function NotesOverview() {
   const [inputValue, setInputValue] = useState("");
   const [notes, setNotes] = useState([]);
+
+  alert(JSON.stringify(firebase, null, 4));
 
   function handleEditBtnPress() {
     setNotes([inputValue, ...notes]);
