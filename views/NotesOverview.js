@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
-import { firebase } from "../lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { firebase, database } from "../lib/firebase";
 import PageWrapper from "../components/PageWrapper";
 import Note from "../components/Note";
 
@@ -8,9 +9,9 @@ export default function NotesOverview() {
   const [inputValue, setInputValue] = useState("");
   const [notes, setNotes] = useState([]);
 
-  alert(JSON.stringify(firebase, null, 4));
+  alert(JSON.stringify(database, null, 4));
 
-  function handleEditBtnPress() {
+  function handleAddBtnPress() {
     setNotes([inputValue, ...notes]);
     setInputValue("");
   }
@@ -29,7 +30,7 @@ export default function NotesOverview() {
           style={styles.noteInput}
         />
         <Pressable
-          onPress={() => handleEditBtnPress()}
+          onPress={() => handleAddBtnPress()}
           style={styles.addButton}
         >
           <Text>Add Note</Text>
