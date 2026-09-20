@@ -9,9 +9,9 @@ export default function Note({ note, onSave, onDelete }) {
   return (
     <View style={styles.noteContainer}>
       <Text style={{ fontSize: 17 }}>● {
-        note.length <= NOTE_PREVIEW_LENGTH_LIMIT 
-          ? note 
-          : `${note.substring(0, NOTE_PREVIEW_LENGTH_LIMIT)}...`
+        note.text.length <= NOTE_PREVIEW_LENGTH_LIMIT 
+          ? note.text 
+          : `${note.text.substring(0, NOTE_PREVIEW_LENGTH_LIMIT)}...`
       }</Text>
       <Button
         title="Edit"

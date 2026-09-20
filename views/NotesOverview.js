@@ -12,7 +12,6 @@ export default function NotesOverview() {
   const [values, loading, error] = useCollection(collection(database, "notes"));
 
   const data = values?.docs.map((d) => ({ id: d.id, ...d.data() })) ?? [];
-  console.log(data);
 
   async function handleAddBtnPress() {
     //setNotes([inputValue, ...notes]);
@@ -26,8 +25,10 @@ export default function NotesOverview() {
     setInputValue("");
   }
 
-  async function handleSave(toSave) {
-    //TODO
+  async function handleUpdate(toSave) {
+    await updateDoc(doc(database, "notes", toSave.id), {
+      text: toSave.text,
+    });
   }
 
   async function handleDelete(id) {
@@ -59,8 +60,8 @@ export default function NotesOverview() {
             renderItem={({ item }) => 
               <Note 
                 key={item.id}
-                note={item.text}
-                onSave={() => handleSave(item)}
+                note={item}
+                onSave={(newNote) => handleUpdate(newNote)}
                 onDelete={() => handleDelete(item.id)}
               />
             }

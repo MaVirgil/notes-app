@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import { useState } from 'react';
 
 export default function NoteDetails({ route }) {
-  const [ inputValue, setInputValue ] = useState(route.params.note);
+  const [ note, setNote ] = useState(route.params.note);
   const navigation = useNavigation();
 
   return (
@@ -13,15 +13,14 @@ export default function NoteDetails({ route }) {
       <View>
         <TextInput
           multiline={true}
-          onChangeText={(value) => setInputValue(value)}
-          value={inputValue}
+          onChangeText={(value) => setNote((prev) => ({...prev, text: value}))}
+          value={note.text}
 
         >
         </TextInput>
       </View>
       <Button title="save" onPress={() => {
-        console.log("Saving note...");
-        route.params.onSave(inputValue);
+        route.params.onSave(note);
         navigation.goBack();
       }}/>
     </PageWrapper>
