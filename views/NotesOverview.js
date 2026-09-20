@@ -8,13 +8,11 @@ import Note from "../components/Note";
 
 export default function NotesOverview() {
   const [inputValue, setInputValue] = useState("");
-  const [notes, setNotes] = useState([]);
   const [values, loading, error] = useCollection(collection(database, "notes"));
 
   const data = values?.docs.map((d) => ({ id: d.id, ...d.data() })) ?? [];
 
   async function handleAddBtnPress() {
-    //setNotes([inputValue, ...notes]);
     try {
       await addDoc(collection(database, "notes"), {
         text: inputValue,
