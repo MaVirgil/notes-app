@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import Button from "../components/Button";
 
-export default function Note({ note, onSave }) {
+export default function Note({ note, onSave, onDelete }) {
   const NOTE_PREVIEW_LENGTH_LIMIT = 25;
   const navigation = useNavigation();
 
@@ -21,6 +21,10 @@ export default function Note({ note, onSave }) {
             onSave,
           });
         }}
+      />
+      <Button
+        title="delete"
+        onPress={() => onDelete()}
       />
     </View>
   );

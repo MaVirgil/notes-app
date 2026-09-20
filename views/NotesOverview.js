@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
-import { collection, addDoc } from "firebase/firestore";
+import { StyleSheet, Text, TextInput, View, Pressable, FlatList } from "react-native";
+import { collection, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { firebase, database } from "../lib/firebase";
 import PageWrapper from "../components/PageWrapper";
@@ -26,6 +26,14 @@ export default function NotesOverview() {
     setInputValue("");
   }
 
+  async function handleSave(toSave) {
+    //TODO
+  }
+
+  async function handleDelete(id) {
+    await deleteDoc(doc(database, "notes", id));
+  }
+
   return (
     <PageWrapper>
       <View style={styles.addNoteContainer}>
@@ -46,21 +54,17 @@ export default function NotesOverview() {
       <View style={{ marginTop: 20 }}>
         <Text style={{ fontSize: 17, fontWeight: "bold" }}>Your Notes:</Text>
         <View style={styles.notesContainer}>
-          {data.map((note) => {
-            return (
-              <Note
-                key={note.id}
-                note={note.text}
-                onSave={(toSave) =>
-                  setNotes((prev) =>
-                    prev.map((item, noteIndex) => {
-                      return noteIndex === index ? toSave : item;
-                    }),
-                  )
-                }
+          <FlatList
+            data={data}
+            renderItem={({ item }) => 
+              <Note 
+                key={item.id}
+                note={item.text}
+                onSave={() => handleSave(item)}
+                onDelete={() => handleDelete(item.id)}
               />
-            );
-          })}
+            }
+          />
         </View>
       </View>
     </PageWrapper>
