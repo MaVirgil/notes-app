@@ -8,13 +8,14 @@ import * as ImagePicker from 'expo-image-picker';
 import PageWrapper from "../components/PageWrapper";
 import Note from "../components/Note";
 import Button from "../components/Button";
+import NotesContainer from "../components/NotesContainer";
 
 export default function NotesOverview() {
   const [inputValue, setInputValue] = useState("");
   const [values, loading, error] = useCollection(collection(database, "notes"));
   const [imagePath, setImagePath] = useState(null);
 
-  const data = values?.docs.map((d) => ({ id: d.id, ...d.data() })) ?? [];
+  const noteData = values?.docs.map((d) => ({ id: d.id, ...d.data() })) ?? [];
 
   async function handleAddBtnPress() {
     try {
@@ -86,17 +87,25 @@ export default function NotesOverview() {
           maxLength={100}
           style={styles.noteInput}
         />
-        <Button title="Add Note" onPress={handleAddBtnPress}/>
-        {imagePath &&
+        <Button title="Add Note" onPress={handleAddBtnPress} />
+        {imagePath && (
           <>
-            <Image style={{ width: 150, height: 150 }}source={{ uri: imagePath }} />
-            <Button title="upload" onPress={handleUploadPress}/>
+            <Image
+              style={{ width: 150, height: 150 }}
+              source={{ uri: imagePath }}
+            />
+            <Button title="upload" onPress={handleUploadPress} />
           </>
-        }
-        <Button onPress={handleFetchImage} title="Fetch Image"/>
-        <Button title="Add Image" onPress={handleImagePicker}/>
+        )}
+        <Button onPress={handleFetchImage} title="Fetch Image" />
+        <Button title="Add Image" onPress={handleImagePicker} />
+        <NotesContainer
+          notes={noteData}
+          onSave={(editedNote) => handleUpdate(editedNote)}
+          onDelete={(id) => handleDelete(id)}
+        />
       </View>
-      <View style={{ marginTop: 20 }}>
+      {/* <View style={{ marginTop: 20 }}>
         <Text style={{ fontSize: 17, fontWeight: "bold" }}>Your Notes:</Text>
         <View style={styles.notesContainer}>
           <FlatList
@@ -111,7 +120,7 @@ export default function NotesOverview() {
             }
           />
         </View>
-      </View>
+      </View> */}
     </PageWrapper>
   );
 }
@@ -139,9 +148,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 10,
-  },
-  notesContainer: {
-    marginTop: 20,
-    gap: 10,
   },
 });
