@@ -2,11 +2,8 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable, FlatList, Image } from "react-native";
 import { collection, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { firebase, database, storage } from "../lib/firebase";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import * as ImagePicker from 'expo-image-picker';
+import { database } from "../lib/firebase";
 import PageWrapper from "../components/PageWrapper";
-import Note from "../components/Note";
 import Button from "../components/Button";
 import NotesContainer from "../components/NotesContainer";
 
@@ -17,7 +14,7 @@ export default function NotesOverview() {
 
   const noteData = values?.docs.map((d) => ({ id: d.id, ...d.data() })) ?? [];
 
-  async function handleAddBtnPress() {
+  async function handleAdd() {
     try {
       await addDoc(collection(database, "notes"), {
         text: inputValue,
@@ -30,48 +27,12 @@ export default function NotesOverview() {
 
   async function handleUpdate(toSave) {
     await updateDoc(doc(database, "notes", toSave.id), {
-      text: toSave.text,
+      ...toSave,
     });
   }
 
   async function handleDelete(id) {
     await deleteDoc(doc(database, "notes", id));
-  }
-
-  async function handleImagePicker() {
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: false,
-    });
-
-    if (result.canceled) {
-      return;
-    }
-
-    setImagePath(result.assets[0].uri);
-  }
-
-  async function handleUploadPress() {
-    const result = await fetch(imagePath);
-    const blob = await result.blob();
-
-    const storageRef = ref(storage, "screenshot.png");
-    uploadBytes(storageRef, blob)
-    .then((snapshot) => {
-      console.log("Image uploaded");
-      setImagePath(null);
-    }).catch((error) => {
-      console.log('An error occured while uploading image: ', error);
-    });
-  }
-
-  async function handleFetchImage() {
-    try {
-      const result = await getDownloadURL(ref(storage, "screenshot.png"));
-      setImagePath(result);
-    } catch (error) {
-      console.log('Couldn\'t fetch image', error);
-    }
   }
 
   return (
@@ -87,40 +48,13 @@ export default function NotesOverview() {
           maxLength={100}
           style={styles.noteInput}
         />
-        <Button title="Add Note" onPress={handleAddBtnPress} />
-        {imagePath && (
-          <>
-            <Image
-              style={{ width: 150, height: 150 }}
-              source={{ uri: imagePath }}
-            />
-            <Button title="upload" onPress={handleUploadPress} />
-          </>
-        )}
-        <Button onPress={handleFetchImage} title="Fetch Image" />
-        <Button title="Add Image" onPress={handleImagePicker} />
+        <Button title="Add Note" onPress={handleAdd} />
         <NotesContainer
           notes={noteData}
           onSave={(editedNote) => handleUpdate(editedNote)}
           onDelete={(id) => handleDelete(id)}
         />
       </View>
-      {/* <View style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 17, fontWeight: "bold" }}>Your Notes:</Text>
-        <View style={styles.notesContainer}>
-          <FlatList
-            data={data}
-            renderItem={({ item }) => 
-              <Note 
-                key={item.id}
-                note={item}
-                onSave={(newNote) => handleUpdate(newNote)}
-                onDelete={() => handleDelete(item.id)}
-              />
-            }
-          />
-        </View>
-      </View> */}
     </PageWrapper>
   );
 }
