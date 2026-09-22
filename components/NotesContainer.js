@@ -2,7 +2,6 @@ import { StyleSheet, View, Text, FlatList } from "react-native";
 import Note from "./Note";
 
 export default function NotesContainer({ notes, onSave, onDelete }) {
-  console.log(`recieved notes: ${JSON.stringify(notes)}`);
   return (
     <View>
       <Text style={{ fontSize: 17, fontWeight: "bold", textAlign: "center"}}>Your Notes:</Text>
