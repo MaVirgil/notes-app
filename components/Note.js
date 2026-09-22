@@ -6,8 +6,6 @@ import { NOTE_PREVIEW_LENGTH_LIMIT } from "../lib/constants";
 export default function Note({ note, onSave, onDelete }) {
   const navigation = useNavigation();
 
-  console.log(`Note component recieved note object: ${JSON.stringify(note)}`)
-
   return (
     <View style={styles.noteContainer}>
       <Text style={{ fontSize: 17 }}>
